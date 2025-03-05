@@ -125,29 +125,35 @@ void FileHandler::handleInitialList(const vector<string> &lines)
 
         if (parseStudentData(lines[currentIndex], rollNo, name, cgpa, numSubjects))
         {
-            CourseInfo *courses = new CourseInfo[numSubjects];
+            CourseInfo *courses = nullptr; // Initialize to nullptr for safety
 
-            for (int i = 0; i < numSubjects && currentIndex + 1 + i < lines.size(); i++)
-            {
-                int courseId;
-                float marks;
-                if (parseCourseData(lines[currentIndex + 1 + i], courseId, marks))
+            if (numSubjects > 0) {
+                courses = new CourseInfo[numSubjects];
+
+                for (int i = 0; i < numSubjects && currentIndex + 1 + i < lines.size(); i++)
                 {
-                    courses[i] = CourseInfo(courseId, marks);
+                    int courseId;
+                    float marks;
+                    if (parseCourseData(lines[currentIndex + 1 + i], courseId, marks))
+                    {
+                        courses[i] = CourseInfo(courseId, marks);
+                    }
                 }
             }
 
             NodeOperations::insertStudent(root, rollNo, name, cgpa, numSubjects, courses, isRollNumberKey);
-            delete[] courses;
-            currentIndex += numSubjects + 1;
+            
+            delete[] courses; // Free memory for courses
+            currentIndex += (numSubjects > 0) ? numSubjects + 1 : 1; // Move to next student
         }
         else
         {
-            currentIndex++;
+            currentIndex++; // If parsing fails, just skip the line
         }
     }
     NodeOperations::displayAll(root);
 }
+
 
 void FileHandler::processLine(const string &line)
 {
