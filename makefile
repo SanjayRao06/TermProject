@@ -1,15 +1,11 @@
 # Compiler
 CXX = g++
 # Compiler flags
-CXXFLAGS = -Wall -g 
+CXXFLAGS = -std=c++11 -Wall -Wextra
 # Target executable
-TARGET = main
+TARGET = student_records
 # Source files
-SRCS = main.cpp \
-       courseinfo.cpp \
-       filehandler.cpp \
-       node.cpp \
-       node_operations.cpp
+SRCS = main.cpp CourseInfo.cpp Node.cpp AVLTree.cpp FileHandler.cpp
 # Object files
 OBJS = $(SRCS:.cpp=.o)
 # Header files
@@ -17,22 +13,32 @@ HEADERS = courseinfo.h \
           filehandler.h \
           node.h \
           node_operations.h
+
 # Default target
 all: $(TARGET)
+
 # Rule to link object files into the target executable
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
 # Rule to compile .cpp files into .o files
 %.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-# Rule to run the executable with input file
+
+# Rule to run the executable with default input file
 run: $(TARGET)
 	./$(TARGET) input.txt
-# Alternative run rule that allows any input file
-# Usage: make run INPUT=your_input_file.txt
-run-with-file: $(TARGET)
-	./$(TARGET) $(INPUT)
+
+# Rule to run with roll number key
+run-rollno: $(TARGET)
+	./$(TARGET) input.txt rollno
+
+# Rule to run with CGPA key
+run-cgpa: $(TARGET)
+	./$(TARGET) input.txt cgpa
+
 # Clean rule to remove generated files
 clean:
-	rm -f $(TARGET) $(OBJS)
-.PHONY: all run run-with-file clean
+	rm -f $(OBJS) $(TARGET)
+
+.PHONY: all run run-rollno run-cgpa clean

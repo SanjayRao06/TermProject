@@ -11,7 +11,7 @@ int NodeOperations::getBalanceFactor(Node* node) {
     if (!node) return 0;
     return getHeight(node->getLeft()) - getHeight(node->getRight());
 }
-bool NodeOperations::deleteStudent(Node* root, int rollNo) {
+bool NodeOperations::deleteStudent(Node*& root, int rollNo) {
     if (!root) return false;
 
     // Find the node to delete

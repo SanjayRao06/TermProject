@@ -1,41 +1,47 @@
-#include "filehandler.h"
+#include "FileHandler.h"
+#include "AVLTree.h"
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 int main(int argc, char* argv[]) {
-    // Check command line arguments
     if (argc < 2 || argc > 3) {
-        cout << "Usage: " << argv[0] << " <input_file> [key_type]" << endl;
-        cout << "key_type: rollno (default) or cgpa" << endl;
+        std::cout << "Usage: " << argv[0] << " <input_file> [key_type]" << std::endl;
+        std::cout << "key_type: rollno (default) or cgpa" << std::endl;
         return 1;
     }
-
-    // Initialize root pointer
-    Node* root = nullptr;
     
     // Determine key type
-    bool isRollNumberKey = true;
+    bool isRollNoKey = true;
     if (argc == 3) {
-        string keyType = argv[2];
+        std::string keyType = argv[2];
         if (keyType == "cgpa") {
-            isRollNumberKey = false;
-        } else if (keyType != "rollno") {
-            cout << "Invalid key type. Use 'rollno' or 'cgpa'." << endl;
+            isRollNoKey = false;
+            std::cout << "Using CGPA as the key for the AVL tree." << std::endl;
+        } else if (keyType == "rollno") {
+            std::cout << "Using Roll Number as the key for the AVL tree." << std::endl;
+        } else {
+            std::cout << "Invalid key type. Use 'rollno' or 'cgpa'." << std::endl;
             return 1;
         }
+    } else {
+        std::cout << "Using Roll Number as the key for the AVL tree (default)." << std::endl;
     }
     
-    // Create file handler with root pointer and key type
-    FileHandler fileHandler(root, isRollNumberKey);
+    // Create AVL tree with specified key type
+    AVLTree tree(isRollNoKey);
+    
+    // Create file handler
+    FileHandler fileHandler(tree);
     
     // Process input file
-    if (!fileHandler.processFile(argv[1])) {
-        cout << "Error processing file: " << argv[1] << endl;
+    std::string filename = argv[1];
+    std::cout << "Processing file: " << filename << std::endl;
+    
+    if (!fileHandler.processFile(filename)) {
+        std::cout << "Error processing file: " << filename << std::endl;
         return 1;
     }
     
-    cout << "File processed successfully." << endl;
+    std::cout << "File processed successfully." << std::endl;
     return 0;
 }

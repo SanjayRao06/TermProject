@@ -25,7 +25,7 @@ private:
 public:
     // Student Operations
     static Node *insertStudent(Node *&root, int rollNo, const std::string &name,float cgpa, int numSubjects, CourseInfo *courses, bool isRollNoKey);
-    static bool deleteStudent(Node *root, int rollNo);
+    static bool deleteStudent(Node *&root, int rollNo);
     static bool modifyStudentCGPA(Node *&root, int rollNo, float newCGPA);
 
     // Course Operations
